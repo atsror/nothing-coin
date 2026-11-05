@@ -1,24 +1,28 @@
 <!DOCTYPE html>
+
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#101317">
   <title>NOTHING COIN</title>
+
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+
   <style>
     :root {
       --site-primary: #c7cbd1;
       --site-on-primary: #111418;
-      --site-secondary: #252b32;
-      --site-on-secondary: #f0f2f5;
       --site-background: #101317;
       --site-on-background: #f4f5f7;
-      --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --site-font-heading: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --site-font-body: Inter, ui-sans-serif, system-ui, sans-serif;
+      --site-font-heading: Inter, ui-sans-serif, system-ui, sans-serif;
       --site-heading-scale: 1;
       --site-spacing-scale: 1;
       --site-radius-scale: 1;
-      --site-decoration-opacity: 1;
       --surface: #191e24;
       --surface-raised: #222831;
       --muted: #9ba3ad;
@@ -26,7 +30,9 @@
       --accent: #d8dce2;
       --good: #a8c9b2;
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       background: var(--site-background);
@@ -34,155 +40,612 @@
       font-family: var(--site-font-body);
       min-height: 100vh;
     }
+
     button { font: inherit; }
+
     .app {
       min-height: 100vh;
       width: 100%;
-      border-radius: 0;
-      background-color: var(--site-background);
+      background: var(--site-background);
       color: var(--site-on-background);
-      padding: calc(22px * var(--site-spacing-scale)) 18px 30px;
+      padding: 22px 18px 30px;
       overflow: hidden;
       position: relative;
     }
-    .wrap { width: min(100%, 520px); margin: 0 auto; position: relative; z-index: 1; }
-    .top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:28px; }
-    .brand { display:flex; align-items:center; gap:11px; }
-    .mark { width:42px; height:42px; border:1px solid #7f8791; border-radius:50%; display:grid; place-items:center; color:var(--accent); font-weight:800; letter-spacing:-1px; font-size:14px; }
-    .brand-name { font-family:var(--site-font-heading); font-weight:750; letter-spacing:1.6px; font-size:14px; }
-    .brand-sub { color:var(--muted); font-size:10px; letter-spacing:2.3px; margin-top:3px; }
-    .status { color:var(--good); border:1px solid #40584a; background:#1b2921; padding:7px 10px; border-radius:999px; font-size:11px; }
-    .balance-card { background:var(--surface); border:1px solid var(--line); border-radius:calc(22px * var(--site-radius-scale)); padding:22px 20px; text-align:center; }
-    .eyebrow { color:var(--muted); font-size:11px; letter-spacing:2px; text-transform:uppercase; }
-    .points { font-family:var(--site-font-heading); font-size:clamp(42px, 12vw, 58px); line-height:1.1; font-weight:750; letter-spacing:-2px; margin:10px 0 5px; font-variant-numeric:tabular-nums; }
-    .unit { color:var(--muted); font-size:12px; letter-spacing:1.8px; }
-    .coin-area { display:flex; flex-direction:column; align-items:center; padding:27px 0 23px; }
-    .coin-button { width:min(62vw, 242px); aspect-ratio:1; border-radius:50%; border:1px solid #8b929b; background:radial-gradient(circle at 35% 28%, #424951 0%, #262d35 48%, #171c22 100%); color:#f5f6f8; box-shadow:0 18px 45px #0008, inset 0 2px 8px #ffffff18; display:grid; place-items:center; cursor:pointer; user-select:none; touch-action:manipulation; transition:transform .09s ease, filter .12s ease; }
-    .coin-button:active { transform:scale(.96); filter:brightness(1.25); }
-    .coin-inner { width:78%; aspect-ratio:1; border:1px solid #9ba2aa77; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:5px; }
-    .coin-nth { font-size:clamp(44px, 12vw, 64px); font-weight:800; letter-spacing:-5px; }
-    .coin-tap { font-size:9px; letter-spacing:3px; color:#c3c8cf; }
-    .tap-hint { color:var(--muted); font-size:12px; margin-top:15px; }
-    .energy-card { background:var(--surface); border:1px solid var(--line); border-radius:calc(16px * var(--site-radius-scale)); padding:15px 16px; width:100%; }
-    .energy-head { display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:10px; }
-    .energy-head span:first-child { color:var(--muted); letter-spacing:1px; }
-    .energy-value { font-variant-numeric:tabular-nums; font-weight:700; }
-    .bar { height:8px; border-radius:99px; background:#343b44; overflow:hidden; }
-    .bar-fill { height:100%; width:100%; background:linear-gradient(90deg,#858e99,#e1e4e8); border-radius:99px; transition:width .2s linear; }
-    .energy-note { color:var(--muted); font-size:10px; margin-top:9px; }
-    .nav { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-top:20px; }
-    .nav button { border:1px solid var(--line); background:var(--surface); color:var(--muted); border-radius:calc(14px * var(--site-radius-scale)); padding:13px 6px; cursor:pointer; font-size:12px; }
-    .nav button.active { background:var(--site-primary); color:var(--site-on-primary); border-color:var(--site-primary); font-weight:700; }
-    .panel { margin-top:16px; background:var(--surface); border:1px solid var(--line); border-radius:calc(18px * var(--site-radius-scale)); padding:19px; min-height:160px; }
-    .panel h2 { font-size:calc(17px * var(--site-heading-scale)); margin:0 0 7px; letter-spacing:-.3px; }
-    .panel p { color:var(--muted); font-size:12px; line-height:1.6; margin:0; }
-    .empty { border:1px dashed #48515c; border-radius:13px; padding:17px; margin-top:15px; color:#b2b8c0; font-size:12px; text-align:center; }
-    .friend-code { display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--surface-raised); padding:12px; border-radius:12px; margin-top:14px; font-size:12px; }
-    .copy { border:0; background:var(--site-primary); color:var(--site-on-primary); border-radius:9px; padding:8px 11px; font-size:11px; font-weight:700; cursor:pointer; }
-    .foot { text-align:center; color:#7f8791; font-size:10px; line-height:1.5; margin:22px auto 0; max-width:340px; }
-    .toast { position:fixed; left:50%; bottom:22px; transform:translate(-50%,20px); opacity:0; pointer-events:none; background:#e1e4e8; color:#111418; padding:10px 15px; border-radius:999px; font-size:12px; transition:.2s; z-index:5; }
-    .toast.show { opacity:1; transform:translate(-50%,0); }
-    @media (min-width:700px) { .app { padding-top:34px; } .coin-area { padding-top:34px; } }
-    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition:none !important; } }
+
+    .wrap {
+      width: min(100%, 520px);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 11px; }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border: 1px solid #7f8791;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: -1px;
+      font-size: 14px;
+    }
+
+    .brand-name {
+      font-family: var(--site-font-heading);
+      font-weight: 750;
+      letter-spacing: 1.6px;
+      font-size: 14px;
+    }
+
+    .brand-sub {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 2.3px;
+      margin-top: 3px;
+    }
+
+    .status {
+      color: var(--good);
+      border: 1px solid #40584a;
+      background: #1b2921;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .balance-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .points {
+      font-family: var(--site-font-heading);
+      font-size: clamp(42px, 12vw, 58px);
+      line-height: 1.1;
+      font-weight: 750;
+      letter-spacing: -2px;
+      margin: 10px 0 5px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .unit {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 1.8px;
+    }
+
+    .coin-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 27px 0 23px;
+    }
+
+    .coin-button {
+      width: min(62vw, 242px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px solid #8b929b;
+      background: radial-gradient(circle at 35% 28%, #424951 0%, #262d35 48%, #171c22 100%);
+      color: #f5f6f8;
+      box-shadow: 0 18px 45px #0008, inset 0 2px 8px #ffffff18;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      transition: transform .09s ease, filter .12s ease;
+    }
+
+    .coin-button:active {
+      transform: scale(.96);
+      filter: brightness(1.25);
+    }
+
+    .coin-button:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+    }
+
+    .coin-inner {
+      width: 78%;
+      aspect-ratio: 1;
+      border: 1px solid #9ba2aa77;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .coin-nth {
+      font-size: clamp(44px, 12vw, 64px);
+      font-weight: 800;
+      letter-spacing: -5px;
+    }
+
+    .coin-tap {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #c3c8cf;
+    }
+
+    .tap-hint {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 15px;
+    }
+
+    .energy-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 15px 16px;
+      width: 100%;
+    }
+
+    .energy-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .energy-head span:first-child {
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .energy-value {
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+    }
+
+    .bar {
+      height: 8px;
+      border-radius: 99px;
+      background: #343b44;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #858e99, #e1e4e8);
+      border-radius: 99px;
+      transition: width .2s linear;
+    }
+
+    .energy-note {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 9px;
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 20px;
+    }
+
+    .nav button {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      border-radius: 14px;
+      padding: 13px 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .nav button.active {
+      background: var(--site-primary);
+      color: var(--site-on-primary);
+      border-color: var(--site-primary);
+      font-weight: 700;
+    }
+
+    .panel {
+      margin-top: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 19px;
+      min-height: 160px;
+    }
+
+    .panel h2 {
+      font-size: 17px;
+      margin: 0 0 7px;
+      letter-spacing: -.3px;
+    }
+
+    .panel p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .empty {
+      border: 1px dashed #48515c;
+      border-radius: 13px;
+      padding: 17px;
+      margin-top: 15px;
+      color: #b2b8c0;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .foot {
+      text-align: center;
+      color: #7f8791;
+      font-size: 10px;
+      line-height: 1.5;
+      margin: 22px auto 0;
+      max-width: 340px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      background: #e1e4e8;
+      color: #111418;
+      padding: 10px 15px;
+      border-radius: 999px;
+      font-size: 12px;
+      transition: .2s;
+      z-index: 5;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (min-width: 700px) {
+      .app { padding-top: 34px; }
+      .coin-area { padding-top: 34px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
   </style>
+
+
 </head>
+
+
 <body>
   <main class="app">
     <div class="wrap">
-      <header class="top">
-        <div class="brand"><div class="mark">NTH</div><div><div class="brand-name">NOTHING COIN</div><div class="brand-sub">TAP GAME · DEMO</div></div></div>
-        <div class="status">● DEMO MODE</div>
-      </header>
-      <section id="gameView">
-        <div class="balance-card">
-          <div class="eyebrow">Your balance</div>
-          <div class="points" id="points">0</div>
-          <div class="unit">NOTHING POINTS</div>
-        </div>
-        <div class="coin-area">
-          <button class="coin-button" id="tapButton" aria-label="Tap to collect one point">
-            <span class="coin-inner"><span class="coin-nth">NTH</span><span class="coin-tap">TAP TO EARN</span></span>
-          </button>
-          <div class="tap-hint">Tap the coin to collect points</div>
-        </div>
-        <div class="energy-card">
-          <div class="energy-head"><span>⚡ ENERGY</span><span class="energy-value"><b id="energy">500</b> / 500</span></div>
-          <div class="bar"><div class="bar-fill" id="energyBar"></div></div>
-          <div class="energy-note">Energy restores automatically · +1 per second</div>
-        </div>
-      </section>
-      <nav class="nav" aria-label="Game sections">
-        <button class="active" data-tab="tap">◉ &nbsp; Tap</button>
-        <button data-tab="tasks">▤ &nbsp; Tasks</button>
-        <button data-tab="friends">♧ &nbsp; Friends</button>
-      </nav>
-      <section class="panel" id="infoPanel">
-        <h2>Welcome to NOTHING COIN</h2>
-        <p>A simple tap game. Collect demo points, keep an eye on your energy and explore the other sections.</p>
-      </section>
-      <p class="foot">Prototype preview only. NOTHING Points are demo game points with no monetary value. No wallet, token, deposits or cash-out are connected.</p>
-    </div>
-    <div class="toast" id="toast" role="status"></div>
+
+
+<header class="top">
+<div class="brand">
+<div class="mark">NTH</div>
+<div>
+<div class="brand-name">NOTHING COIN</div>
+<div class="brand-sub">TAP GAME · DEMO</div>
+</div>
+</div>
+<div class="status" id="connectionStatus">● CONNECTING</div>
+</header>
+
+<section id="gameView">
+<div class="balance-card">
+<div class="eyebrow">Your balance</div>
+<div class="points" id="points">0</div>
+<div class="unit">NOTHING POINTS</div>
+</div>
+
+<div class="coin-area">
+<button class="coin-button" id="tapButton" aria-label="Tap to collect one point" disabled>
+<span class="coin-inner">
+<span class="coin-nth">NTH</span>
+<span class="coin-tap">TAP TO EARN</span>
+</span>
+</button>
+<div class="tap-hint" id="tapHint">Connecting to server...</div>
+</div>
+
+<div class="energy-card">
+<div class="energy-head">
+<span>⚡ ENERGY</span>
+<span class="energy-value"><b id="energy">500</b> / 500</span>
+</div>
+<div class="bar">
+<div class="bar-fill" id="energyBar"></div>
+</div>
+<div class="energy-note">Energy restores automatically · +1 per second</div>
+</div>
+</section>
+
+<nav class="nav" aria-label="Game sections">
+<button class="active" data-tab="tap">◉   Tap</button>
+<button data-tab="tasks">▤   Tasks</button>
+<button data-tab="friends">♧   Friends</button>
+</nav>
+
+<section class="panel" id="infoPanel">
+<h2>Welcome to NOTHING COIN</h2>
+<p>A simple tap game. Collect demo points, keep an eye on your energy and explore the other sections.</p>
+</section>
+
+<p class="foot">
+Prototype preview only. NOTHING Points are demo game points with no monetary value.
+No wallet, token, deposits or cash-out are connected.
+</p>
+
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
   </main>
+
+
   <script>
     (() => {
+      "use strict";
+
+      const API_URL =
+        "https://sybnkypyiijggknjyhha.supabase.co/functions/v1/nothing-coin-api";
+
       const MAX_ENERGY = 500;
-      const storageKey = 'nothing-coin-demo-v1';
-      let state = { points: 0, energy: MAX_ENERGY, lastTick: Date.now() };
-      try {
-        const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
-        if (saved && Number.isFinite(saved.points) && Number.isFinite(saved.energy)) {
-          state.points = Math.max(0, Math.floor(saved.points));
-          state.energy = Math.max(0, Math.min(MAX_ENERGY, Math.floor(saved.energy)));
-          state.lastTick = Number.isFinite(saved.lastTick) ? saved.lastTick : Date.now();
-        }
-      } catch (_) {}
-      const $ = id => document.getElementById(id);
-      const fmt = n => Math.floor(n).toLocaleString('en-US');
-      function save() {
-        try { localStorage.setItem(storageKey, JSON.stringify(state)); } catch (_) {}
-      }
-      function render() {
-        $('points').textContent = fmt(state.points);
-        $('energy').textContent = fmt(state.energy);
-        $('energyBar').style.width = `${(state.energy / MAX_ENERGY) * 100}%`;
-        $('tapButton').disabled = state.energy <= 0;
-        $('tapButton').style.opacity = state.energy <= 0 ? '.55' : '1';
-      }
-      function toast(message) {
-        const el = $('toast'); el.textContent = message; el.classList.add('show');
-        clearTimeout(toast.timer); toast.timer = setTimeout(() => el.classList.remove('show'), 1500);
-      }
-      $('tapButton').addEventListener('click', () => {
-        if (state.energy < 1) { toast('Energy is empty. Please wait.'); return; }
-        state.points += 1;
-        state.energy -= 1;
-        render(); save();
-      });
-      function tick() {
-        const now = Date.now();
-        const elapsed = Math.max(0, Math.floor((now - state.lastTick) / 1000));
-        if (elapsed > 0) {
-          state.energy = Math.min(MAX_ENERGY, state.energy + elapsed);
-          state.lastTick += elapsed * 1000;
-          render(); save();
-        }
-      }
-      setInterval(tick, 500);
-      render();
-      const panel = $('infoPanel');
-      const tabContent = {
-        tap: '<h2>Welcome to NOTHING COIN</h2><p>A simple tap game. Collect demo points, keep an eye on your energy and explore the other sections.</p>',
-        tasks: '<h2>Tasks</h2><p>Tasks will appear here when the task system is connected.</p><div class="empty">No active tasks in this prototype.</div>',
-        friends: '<h2>Friends</h2><p>Invite features will be added when Telegram accounts and referral tracking are connected.</p><div class="empty">Referral system is not connected yet.</div>'
+
+      const tg = window.Telegram?.WebApp;
+
+      let state = {
+        points: 0,
+        energy: MAX_ENERGY,
+        maxEnergy: MAX_ENERGY,
+        lastTick: Date.now()
       };
-      document.querySelectorAll('.nav button').forEach(button => {
-        button.addEventListener('click', () => {
-          document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('active', b === button));
+
+      let connected = false;
+      let busy = false;
+
+      const $ = id => document.getElementById(id);
+      const fmt = n => Math.floor(n).toLocaleString("en-US");
+
+      function toast(message) {
+        const el = $("toast");
+        el.textContent = message;
+        el.classList.add("show");
+
+        clearTimeout(toast.timer);
+
+        toast.timer = setTimeout(() => {
+          el.classList.remove("show");
+        }, 2200);
+      }
+
+      function render() {
+        $("points").textContent = fmt(state.points);
+        $("energy").textContent = fmt(state.energy);
+
+        const percentage =
+          (state.energy / state.maxEnergy) * 100;
+
+        $("energyBar").style.width = `${percentage}%`;
+
+        $("tapButton").disabled =
+          !connected || busy || state.energy < 1;
+
+        $("tapHint").textContent = !connected
+          ? "Waiting for server connection..."
+          : busy
+            ? "Please wait..."
+            : state.energy < 1
+              ? "Energy is empty. Please wait."
+              : "Tap the coin to collect points";
+      }
+
+      async function sendAction(action) {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            initData: tg.initData,
+            action: action
+          })
+        });
+
+        let result;
+
+        try {
+          result = await response.json();
+        } catch (_) {
+          throw new Error("Invalid server response");
+        }
+
+        if (!response.ok) {
+          throw new Error(result.error || "Server request failed");
+        }
+
+        if (
+          !Number.isFinite(result.points) ||
+          !Number.isFinite(result.energy)
+        ) {
+          throw new Error("Invalid game data");
+        }
+
+        return result;
+      }
+
+      function updateFromServer(result) {
+        state.points = Math.max(0, Math.floor(result.points));
+        state.energy = Math.max(0, Math.floor(result.energy));
+
+        state.maxEnergy = Number.isFinite(result.max_energy)
+          ? result.max_energy
+          : MAX_ENERGY;
+
+        state.lastTick = Date.now();
+
+        connected = true;
+
+        $("connectionStatus").textContent = "● CONNECTED";
+
+        render();
+      }
+
+      async function connectToServer() {
+        if (!tg || !tg.initData) {
+          $("connectionStatus").textContent = "● OPEN IN TELEGRAM";
+          $("tapHint").textContent = "Please open this game inside Telegram.";
+          toast("Open NOTHING COIN through the Telegram bot.");
+          render();
+          return;
+        }
+
+        tg.ready();
+        tg.expand();
+
+        try {
+          const result = await sendAction("sync");
+          updateFromServer(result);
+          toast("Account connected successfully.");
+        } catch (error) {
+          connected = false;
+          $("connectionStatus").textContent = "● CONNECTION ERROR";
+          $("tapHint").textContent = "Could not connect. Please try again.";
+          render();
+
+          console.error("Connection error:", error);
+          toast("Server connection failed. Please try again.");
+        }
+      }
+
+      async function tapCoin() {
+        if (!connected || busy) return;
+
+        if (state.energy < 1) {
+          toast("Energy is empty. Please wait.");
+          return;
+        }
+
+        busy = true;
+        render();
+
+        try {
+          const result = await sendAction("tap");
+          updateFromServer(result);
+        } catch (error) {
+          console.error("Tap error:", error);
+          toast("Tap was not saved. Please try again.");
+        } finally {
+          busy = false;
+          render();
+        }
+      }
+
+      $("tapButton").addEventListener("click", tapCoin);
+
+      function energyTick() {
+        if (!connected || busy) return;
+
+        const now = Date.now();
+        const elapsed = Math.floor(
+          (now - state.lastTick) / 1000
+        );
+
+        if (elapsed > 0) {
+          state.energy = Math.min(
+            state.maxEnergy,
+            state.energy + elapsed
+          );
+
+          state.lastTick += elapsed * 1000;
+          render();
+        }
+      }
+
+      setInterval(energyTick, 500);
+
+      setInterval(async () => {
+        if (!connected || busy) return;
+
+        try {
+          const result = await sendAction("sync");
+          updateFromServer(result);
+        } catch (error) {
+          console.error("Sync error:", error);
+        }
+      }, 10000);
+
+      const panel = $("infoPanel");
+
+      const tabContent = {
+        tap: `
+          <h2>Welcome to NOTHING COIN</h2>
+          <p>A simple tap game. Collect demo points, keep an eye on your energy and explore the other sections.</p>
+        `,
+        tasks: `
+          <h2>Tasks</h2>
+          <p>Tasks will appear here when the task system is connected.</p>
+          <div class="empty">No active tasks in this prototype.</div>
+        `,
+        friends: `
+          <h2>Friends</h2>
+          <p>Invite features will be added when Telegram accounts and referral tracking are connected.</p>
+          <div class="empty">Referral system is not connected yet.</div>
+        `
+      };
+
+      document.querySelectorAll(".nav button").forEach(button => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll(".nav button").forEach(b => {
+            b.classList.toggle("active", b === button);
+          });
+
           panel.innerHTML = tabContent[button.dataset.tab];
         });
       });
+
+      render();
+      connectToServer();
+
     })();
   </script>
+
+
 </body>
 </html>
+```
